@@ -1,5 +1,11 @@
 use clap::{Arg, ArgAction, Command};
 
+pub mod cpu;
+pub mod pin;
+
+mod commands;
+use commands::{disable, enable, watch};
+
 // pifanctl -p 14 watch -s 900 -t 55 -d 10
 // pifanctl -p 14 enable
 // pifanctl -p 14 disable
@@ -61,6 +67,7 @@ fn main() {
         .unwrap()
         .parse::<u64>()
         .unwrap();
+
     match matches.subcommand() {
         Some(("watch", matches)) => {
             let min_time = matches
@@ -80,7 +87,7 @@ fn main() {
                 .unwrap();
             let verbose = matches.get_one::<bool>("verbose").unwrap().to_owned();
 
-            pifanctl::watch(pifanctl::WatchOptions {
+            watch::run(watch::WatchOptions {
                 fan_pin_num,
                 min_time,
                 hot_cpu_temp: cpu_temp * 1000,
@@ -88,8 +95,8 @@ fn main() {
                 verbose,
             });
         }
-        Some(("enable", _)) => pifanctl::set_pin_state(fan_pin_num, 1),
-        Some(("disable", _)) => pifanctl::set_pin_state(fan_pin_num, 0),
+        Some(("enable", _)) => enable::run(enable::EnableOptions { fan_pin_num }),
+        Some(("disable", _)) => disable::run(disable::DisableOptions { fan_pin_num }),
         _ => unreachable!(),
     }
 }
