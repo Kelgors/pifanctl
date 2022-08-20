@@ -11,7 +11,7 @@ use commands::{disable, enable, watch};
 // pifanctl -p 14 disable
 fn cli() -> Command<'static> {
     Command::new("pifanctl")
-        .about("Fan controller")
+        .about("GPIO fan controller for Raspberry Pi")
         .version("1.0.0")
         .author("Matthieu BOHEAS")
         .arg(
